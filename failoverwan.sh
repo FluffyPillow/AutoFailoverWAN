@@ -1,5 +1,5 @@
 #!/bin/bash
-#v10.0 final
+#v10.0.1 final
 exec 2> /dev/null
 if [ $# -lt 2 ]; then exit; fi
 
@@ -25,7 +25,7 @@ fi
 
 ### default value of ping opts
 if [[ -z "$(cat $PING_COUNT_FILE)" ]]; then echo 20 > $PING_COUNT_FILE; fi
-if [[ -z "$(cat $PING_INTERVAL_MAX)" ]]; then echo 0.1 > $PING_INTERVAL_MAX; fi
+if [[ -z "$(cat $PING_INTERVAL_MAX)" ]]; then echo 0.2 > $PING_INTERVAL_MAX; fi
 ###
 
 while true; do
@@ -38,7 +38,7 @@ while true; do
                        checking_ip=$(ping -i$(cat $PING_INTERVAL_MAX) -q -n -I $DEF_INTERFACE -c$(cat $PING_COUNT_FILE) $external_checking_ip)
                        echo "$checking_ip"  | grep -q "100% packet loss" && checking_ip= # clean var-indicator
                                if [[ -n "$checking_ip" ]]; then # if all ok - calculate loss packets, and if it more than 5 - clean var-indicator
-                                        checking_ip=$(ping -i$(cat $PING_INTERVAL_MAX) -q -n -I $DEF_INTERFACE -c$(cat $PING_COUNT_FILE) $external_checking_ip | grep -oP '\d+(?=% packet loss)')
+                                        checking_ip=$(echo $checking_ip | grep -oP '\d+(?=% packet loss)')
                                         if [ "$checking_ip" -gt "5" ]; then checking_ip= ; fi
                                fi
                        fi
