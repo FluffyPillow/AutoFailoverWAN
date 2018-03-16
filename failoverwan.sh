@@ -14,7 +14,7 @@ if [ ! -f $PING_COUNT_FILE ]; then touch $PING_COUNT_FILE; fi
 if [ ! -f $PING_INTERVAL_MAX ]; then touch $PING_INTERVAL_MAX; fi
 
 
-while [[ -z "$(route | grep default | awk '{print $8}')" ]] # if you launching this script on system startup - wait when routes will be set
+while [[ -z "$(route -n | awk '$1=="0.0.0.0" {print $8; exit 0}')" ]] # if you launching this script on system startup - wait when routes will be set
 do
   sleep 1
 done
